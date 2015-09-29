@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 
-import xlrd3
+import xlrd
 import argparse
 import re
 import subprocess as sp
 import telnetlib
 import string
 import configparser
+from socket import *
+import ipaddress
 
 def xlsfile(w_file):
     global wb
     try:
-        wb = xlrd3.open_workbook(w_file)
-    except xlrd3.mmap.error:
+        wb = xlrd.open_workbook(w_file)
+    except xlrd.mmap.error:
         print("%s не является файлом в формате Excel" % w_file, end="\n")
         exit(0)
     except IOError:
@@ -32,17 +34,18 @@ sheet = wb.sheet_by_index(args.sheet_index - 1)
 config.read(r'settings.conf')
 
 def get_mac():
-    try:
+    """try:
         stdout,stderr = sp.Popen(["pviqutil.exe"], stdout=sp.PIPE, stderr=sp.PIPE, stdin=sp.PIPE).communicate(b'\n')
     except WindowsError:
         print("Не могу найти файл pviqutil.exe,\n убедитесь, что он находится в каталоге указанном в переменной окружения PATH.")
-        exit(1)
+        exit(1)"""
     ipnmac = {}
-    for line in stdout.decode().split('\n'):
+    """for line in stdout.decode().split('\n'):
         search_line_mac = re.search(r"([0-9A-F]{2}[:-]){5}([0-9A-F]{2})", line)
         search_line_ip = re.search(r"((2[0-5]|1[0-9]|[0-9])?[0-9]\.){3}((2[0-5]|1[0-9]|[0-9])?[0-9])", line)
         if search_line_mac:
-            ipnmac.update({search_line_mac.group():search_line_ip.group()})
+            ipnmac.update({search_line_mac.group():search_line_ip.group()})"""
+
     return ipnmac
 
 def get_data_xls(mac_addr):
